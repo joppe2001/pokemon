@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const borderContent = document.getElementById('border-content');
   const spriteWidth = 40 + 10; // Width + margin-right
-  const animationDuration = 8; // Animation duration in seconds
+  const animationDuration = 10; // Animation duration in seconds
 
   function createPokemonSprite(url) {
     const div = document.createElement('div');
@@ -59,7 +59,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     moveSprites();
     checkAndRemoveOffscreenPokemon();
-    setTimeout(animate, 50); // Run the animation loop every 100ms for smooth motion
+    setTimeout(animate, 70); // Run the animation loop every 100ms for smooth motion
   }
 
   addPokemonSet(); // Initial set of Pokémon
