@@ -18,6 +18,17 @@ body {
 .border-content {
   display: flex;
   align-items: center;
+  width: 200%; /* Double the width to ensure seamless looping */
+  animation: scroll 20s linear infinite;
+}
+
+@keyframes scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
 }
 
 .pokemon {
@@ -25,15 +36,5 @@ body {
   height: 40px; /* Smaller sprite size */
   margin-right: 10px; /* Smaller margin */
   background-size: cover;
-  position: relative;
-  animation: move 10s linear infinite;
-}
-
-@keyframes move {
-  0% {
-    transform: translateX(100vw);
-  }
-  100% {
-    transform: translateX(-100vw);
-  }
+  flex-shrink: 0;
 }
