@@ -11,20 +11,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const borderContent = document.getElementById('border-content');
 
-  function createPokemonSprite(url) {
+  function createPokemonSprite(url, index) {
     const div = document.createElement('div');
     div.className = 'pokemon';
     div.style.backgroundImage = `url(${url})`;
+    div.style.animationDelay = `${index * 1.5}s`; // Adjust animation delay for better continuity
     return div;
   }
 
   function populateBorder() {
-    pokemonList.forEach(url => {
-      const sprite = createPokemonSprite(url);
+    const totalSprites = Math.ceil(window.innerWidth / 50) * 2; // Calculate required sprites for seamless loop
+    for (let i = 0; i < totalSprites; i++) {
+      const url = pokemonList[i % pokemonList.length];
+      const sprite = createPokemonSprite(url, i);
       borderContent.appendChild(sprite);
-      const clone = createPokemonSprite(url);
-      borderContent.appendChild(clone);
-    });
+    }
   }
 
   populateBorder();
