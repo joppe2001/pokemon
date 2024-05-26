@@ -30,28 +30,31 @@ document.addEventListener('DOMContentLoaded', () => {
   function animateSprites() {
     const totalWidth = borderContent.scrollWidth;
 
-    borderContent.animate(
-      [
-        { transform: 'translateX(0)' },
-        { transform: `translateX(-${totalWidth}px)` }
-      ],
-      {
-        duration: animationDuration * 1000,
-        iterations: Infinity,
-        easing: 'linear'
+    borderContent.style.display = 'flex';
+    borderContent.style.animation = `scroll ${animationDuration}s linear infinite`;
+
+    const keyframes = `
+      @keyframes scroll {
+        0% { transform: translateX(0); }
+        100% { transform: translateX(-${totalWidth}px); }
       }
-    );
+    `;
+
+    const styleSheet = document.createElement("style");
+    styleSheet.type = "text/css";
+    styleSheet.innerText = keyframes;
+    document.head.appendChild(styleSheet);
 
     setInterval(() => {
       const firstSprite = borderContent.firstElementChild;
       borderContent.appendChild(firstSprite);
       borderContent.style.transition = 'none';
       borderContent.style.transform = `translateX(0)`;
-      setTimeout(() => {
+      requestAnimationFrame(() => {
         borderContent.style.transition = 'transform 0s linear';
         borderContent.style.transform = `translateX(-${spriteWidth}px)`;
-      }, 0);
-    }, animationDuration * 1000 / (borderContent.children.length / 2));
+      });
+    }, (animationDuration * 1000) / (borderContent.children.length));
   }
 
   addPokemonSet(); // Initial set of Pokémon
