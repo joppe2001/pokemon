@@ -17,43 +17,46 @@ document.addEventListener('DOMContentLoaded', () => {
     const div = document.createElement('div');
     div.className = 'pokemon';
     div.style.backgroundImage = `url(${url})`;
+    div.style.width = '40px';
+    div.style.height = '40px';
+    div.style.marginRight = '10px';
+    div.style.position = 'absolute';
+    div.style.bottom = '0';
+    div.style.transform = `translateX(${window.innerWidth}px)`;
     return div;
   }
 
   function addPokemonSet() {
     pokemonList.forEach(url => {
       const sprite = createPokemonSprite(url);
-      sprite.style.transform = `translateX(${window.innerWidth}px)`;
       borderContent.appendChild(sprite);
+      requestAnimationFrame(() => moveSprite(sprite));
     });
   }
 
-  function moveSprites() {
-    const pokemonElements = document.querySelectorAll('.pokemon');
-    pokemonElements.forEach((sprite, index) => {
-      sprite.style.transition = `transform ${animationDuration}s linear`;
-      sprite.style.transform = `translateX(${sprite.offsetLeft - window.innerWidth - spriteWidth}px)`;
-    });
-  }
+  function moveSprite(sprite) {
+    const startTime = performance.now();
+    function animate(time) {
+      const elapsed = time - startTime;
+      const progress = elapsed / (animationDuration * 1000);
+      const currentX = window.innerWidth - (window.innerWidth + spriteWidth) * progress;
+      sprite.style.transform = `translateX(${currentX}px)`;
 
-  function checkAndRemoveOffscreenPokemon() {
-    const pokemonElements = document.querySelectorAll('.pokemon');
-    pokemonElements.forEach(sprite => {
-      const rect = sprite.getBoundingClientRect();
-      if (rect.right < 0) {
+      if (progress < 1) {
+        requestAnimationFrame(animate);
+      } else {
         sprite.remove();
       }
-    });
+    }
+    requestAnimationFrame(animate);
   }
 
   function animate() {
-    const pokemonElements = document.querySelectorAll('.pokemon');
-    if (pokemonElements.length === 0 || pokemonElements[pokemonElements.length - 1].getBoundingClientRect().right < window.innerWidth) {
+    const lastSprite = borderContent.lastChild;
+    if (!lastSprite || lastSprite.getBoundingClientRect().right < window.innerWidth) {
       addPokemonSet();
     }
-    moveSprites();
-    checkAndRemoveOffscreenPokemon();
-    requestAnimationFrame(animate); // Use requestAnimationFrame for smoother animation
+    requestAnimationFrame(animate);
   }
 
   addPokemonSet(); // Initial set of Pokémon
