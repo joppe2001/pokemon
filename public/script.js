@@ -27,23 +27,20 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  function duplicatePokemonSet() {
-    const pokemonSprites = borderContent.children;
-    Array.prototype.forEach.call(pokemonSprites, sprite => {
-      const duplicate = sprite.cloneNode(true);
-      borderContent.appendChild(duplicate);
-    });
-  }
-
   addPokemonSet(); // Initial set of Pokémon
-  duplicatePokemonSet(); // Duplicate the set for infinite loop
 
-  borderContent.style.animation = `scroll ${animationDuration}s linear infinite`;
+  let currentSpriteIndex = 0;
+
+  borderContent.addEventListener('scroll', () => {
+    const scrollLeft = borderContent.scrollLeft;
+    const spriteWidthWithMargin = spriteWidth + 10; // Add margin-right
+    const visibleSprites = Math.floor(scrollLeft / spriteWidthWithMargin) + 1;
+
+    while (borderContent.children.length < visibleSprites + 2) {
+      const nextSpriteUrl = pokemonList[currentSpriteIndex % pokemonList.length];
+      const nextSprite = createPokemonSprite(nextSpriteUrl);
+      borderContent.appendChild(nextSprite);
+      currentSpriteIndex++;
+    }
+  });
 });
-
-document.styleSheets[0].insertRule(`
-  @keyframes scroll {
-    0% { transform: translateX(0); }
-    100% { transform: translateX(-100%); }
-  }
-`);
