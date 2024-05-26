@@ -29,6 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function animateSprites() {
     const totalWidth = borderContent.scrollWidth;
+    const spriteCount = borderContent.children.length;
 
     borderContent.style.display = 'flex';
     borderContent.style.animation = `scroll ${animationDuration}s linear infinite`;
@@ -45,16 +46,10 @@ document.addEventListener('DOMContentLoaded', () => {
     styleSheet.innerText = keyframes;
     document.head.appendChild(styleSheet);
 
-    setInterval(() => {
-      const firstSprite = borderContent.firstElementChild;
-      borderContent.appendChild(firstSprite);
-      borderContent.style.transition = 'none';
-      borderContent.style.transform = `translateX(0)`;
-      requestAnimationFrame(() => {
-        borderContent.style.transition = 'transform 0s linear';
-        borderContent.style.transform = `translateX(-${spriteWidth}px)`;
-      });
-    }, (animationDuration * 1000) / (borderContent.children.length));
+    // Create a clone of the first sprite and append it to the end
+    // This creates a seamless loop
+    const firstSprite = borderContent.firstElementChild.cloneNode(true);
+    borderContent.appendChild(firstSprite);
   }
 
   addPokemonSet(); // Initial set of Pokémon
