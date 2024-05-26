@@ -30,15 +30,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function moveSprites() {
     const pokemonElements = document.querySelectorAll('.pokemon');
-    pokemonElements.forEach(sprite => {
-      const currentTransform = getComputedStyle(sprite).transform;
-      let currentX = 0;
-      if (currentTransform !== 'none') {
-        const matrix = new WebKitCSSMatrix(currentTransform);
-        currentX = matrix.m41;
-      }
+    pokemonElements.forEach((sprite, index) => {
       sprite.style.transition = `transform ${animationDuration}s linear`;
-      sprite.style.transform = `translateX(${currentX - window.innerWidth - spriteWidth}px)`;
+      sprite.style.transform = `translateX(${sprite.offsetLeft - window.innerWidth - spriteWidth}px)`;
     });
   }
 
@@ -59,7 +53,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     moveSprites();
     checkAndRemoveOffscreenPokemon();
-    setTimeout(animate, 70); // Run the animation loop every 100ms for smooth motion
+    requestAnimationFrame(animate); // Use requestAnimationFrame for smoother animation
   }
 
   addPokemonSet(); // Initial set of Pokémon
