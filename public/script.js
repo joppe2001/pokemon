@@ -18,15 +18,32 @@ document.addEventListener('DOMContentLoaded', () => {
     return div;
   }
 
-  function populateBorder() {
-    // Create two sets of Pokémon sprites for seamless looping
-    for (let i = 0; i < 2; i++) {
-      pokemonList.forEach(url => {
-        const sprite = createPokemonSprite(url);
-        borderContent.appendChild(sprite);
-      });
-    }
+  function addPokemonSet() {
+    pokemonList.forEach(url => {
+      const sprite = createPokemonSprite(url);
+      borderContent.appendChild(sprite);
+    });
   }
 
-  populateBorder();
+  function checkAndRemoveOffscreenPokemon() {
+    const pokemonElements = document.querySelectorAll('.pokemon');
+    pokemonElements.forEach(sprite => {
+      const rect = sprite.getBoundingClientRect();
+      if (rect.right < 0) {
+        sprite.remove();
+      }
+    });
+  }
+
+  function animate() {
+    const pokemonElements = document.querySelectorAll('.pokemon');
+    if (pokemonElements.length === 0 || pokemonElements[pokemonElements.length - 1].getBoundingClientRect().right < window.innerWidth) {
+      addPokemonSet();
+    }
+    checkAndRemoveOffscreenPokemon();
+    requestAnimationFrame(animate);
+  }
+
+  addPokemonSet(); // Initial set of Pokémon
+  animate(); // Start the animation loop
 });
