@@ -10,6 +10,8 @@ document.addEventListener('DOMContentLoaded', () => {
   ];
 
   const borderContent = document.getElementById('border-content');
+  const spriteWidth = 50; // Width + margin-right
+  const animationDuration = 10; // Animation duration in seconds
 
   function createPokemonSprite(url) {
     const div = document.createElement('div');
@@ -26,25 +28,30 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function animateSprites() {
-    const firstSprite = borderContent.firstElementChild;
-    const spriteWidth = firstSprite.offsetWidth + 10; // Include margin-right
+    const totalWidth = borderContent.scrollWidth;
 
-    function move() {
-      const sprites = document.querySelectorAll('.pokemon');
-      sprites.forEach(sprite => {
-        const currentX = parseFloat(getComputedStyle(sprite).transform.split(',')[4]) || 0;
-        sprite.style.transform = `translateX(${currentX - spriteWidth}px)`;
-      });
-
-      const lastSprite = borderContent.lastElementChild;
-      if (lastSprite.getBoundingClientRect().right < window.innerWidth) {
-        addPokemonSet();
+    borderContent.animate(
+      [
+        { transform: 'translateX(0)' },
+        { transform: `translateX(-${totalWidth}px)` }
+      ],
+      {
+        duration: animationDuration * 1000,
+        iterations: Infinity,
+        easing: 'linear'
       }
+    );
 
-      requestAnimationFrame(move);
-    }
-
-    move();
+    setInterval(() => {
+      const firstSprite = borderContent.firstElementChild;
+      borderContent.appendChild(firstSprite);
+      borderContent.style.transition = 'none';
+      borderContent.style.transform = `translateX(0)`;
+      setTimeout(() => {
+        borderContent.style.transition = 'transform 0s linear';
+        borderContent.style.transform = `translateX(-${spriteWidth}px)`;
+      }, 0);
+    }, animationDuration * 1000 / (borderContent.children.length / 2));
   }
 
   addPokemonSet(); // Initial set of Pokémon
