@@ -10,6 +10,8 @@ document.addEventListener('DOMContentLoaded', () => {
   ];
 
   const borderContent = document.getElementById('border-content');
+  const spriteWidth = 50; // Width + margin-right
+  const animationDuration = 10; // Animation duration in seconds
 
   function createPokemonSprite(url) {
     const div = document.createElement('div');
@@ -35,4 +37,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
   addPokemonSet(); // Initial set of Pokémon
   duplicatePokemonSet(); // Duplicate the set for infinite loop
+
+  borderContent.style.animation = `scroll ${animationDuration}s linear infinite`;
 });
+
+document.styleSheets[0].insertRule(`
+  @keyframes scroll {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-100%); }
+  }
+`);
